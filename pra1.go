@@ -21,13 +21,27 @@ var valor = make([]string,0)
 var itens = [5]string{"Copo", "Garrafa", "Carteira", "Sapato", "Secador"}
 var itensComprados = make([]string,0)
 var qtdDisc = make([]int, 0)
-var discNum = 0
 
 
 func check(e error) {
 	if e != nil {
 		panic(e)
 	}
+}
+
+func escreveValores(id int, f *os.File) {
+	w := bufio.NewWriter(f)
+	w.WriteString(strconv.Itoa(codCliente[id]))
+	w.WriteString(";")
+	w.WriteString(strconv.Itoa(codFunc[id]))
+	w.WriteString(";")
+	w.WriteString(dataVenda[id])
+    w.WriteString(";")
+    w.WriteString(valor[id])
+    w.WriteString(";")
+    w.WriteString(itensComprados[id])
+	w.WriteString("\n")
+	w.Flush()
 }
 
 func criaValores(id int) {
@@ -57,25 +71,10 @@ func criaValores(id int) {
 
 }
 
-func escreveValores(id int, f *os.File) {
-	w := bufio.NewWriter(f)
-	w.WriteString(strconv.Itoa(codCliente[id]))
-	w.WriteString(";")
-	w.WriteString(strconv.Itoa(codFunc[id]))
-	w.WriteString(";")
-	w.WriteString(dataVenda[id])
-    w.WriteString(";")
-    w.WriteString(valor[id])
-    w.WriteString(";")
-    w.WriteString(itensComprados[id])
-	w.WriteString("\n")
-	w.Flush()
-}
-
 func leArquivo(f *os.File, qtd int) {
 	scanner := bufio.NewScanner(f)
 	reader := bufio.NewReader(os.Stdin)
-	cont := 1
+	cont := 0
 	for scanner.Scan() {
 		if cont%qtd == 0 {
 			reader.ReadBytes('\n')
@@ -100,7 +99,7 @@ func main() {
 		fmt.Println("ERRO! \nopção invalida!")
 	} else if escolha == 1 {
         // cria o arquivo
-		f, err := os.Create("file.bin")
+		f, err := os.Create("arquivo.txt")
 		check(err)
 
 		defer f.Close()
@@ -161,7 +160,7 @@ func main() {
 	} else if escolha == 2 {
         // leitura
 
-		f, err := os.Open("file.bin")
+		f, err := os.Open("arquivo.txt")
 		check(err)
 
 		defer f.Close()
@@ -173,7 +172,7 @@ func main() {
 
         t = time.Now()
         
-		leArquivo(f, qtdLer)
+		leArquivo(f, qtdLer)		
 		f.Close()
 	}
     d := time.Now()
