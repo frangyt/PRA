@@ -44,6 +44,19 @@ func escreveValores(id int, f *os.File) {
 	w.Flush()
 }
 
+func ordena(f *os.File) {
+	n, err := f.Stat()
+	if err != nil {
+		panic(err)
+	}
+	tamanho := n.Size()
+
+	// separa ao meio, se o tamanho é maior que a memoria separa denovo
+	// após isso roda a equação e ve quantas vezes sera feia a ordenação
+	// http://www.decom.ufop.br/guilherme/BCC203/geral/ed2_ordenacao-externa.pdf
+	// não sei se isso realmente funciona mas ta ai
+}
+
 func criaValores(id int) {
 	//data de venda
 	dia = rand.Intn(28) + 1
@@ -53,9 +66,9 @@ func criaValores(id int) {
 
 	//codigo do funcionario
     codFunc = append(codFunc, id + 1)
-    
+
     //codigo do Cliente
-    codCliente = append(codCliente,id + 1) 
+    codCliente = append(codCliente,id + 1)
 
 
 
@@ -144,9 +157,9 @@ func main() {
 			fmt.Scan(&sizeReg)
 			cont := 0
 
-			
+
             t = time.Now()
-            
+
             // cria os valores e escreve
             // ele da um for considerando o tamanho do arquivo tam.size e o tamanho informado sizeReg
 			for tam.Size() < sizeReg {
@@ -164,15 +177,16 @@ func main() {
 		check(err)
 
 		defer f.Close()
+		ordena(f)
 
         var qtdLer int
-        // informa quantos registros serão lidos 
+        // informa quantos registros serão lidos
 		fmt.Println("Deseja ler quantos registros por vez?")
 		fmt.Scan(&qtdLer)
 
         t = time.Now()
-        
-		leArquivo(f, qtdLer)		
+
+		leArquivo(f, qtdLer)
 		f.Close()
 	}
     d := time.Now()
